@@ -44,10 +44,10 @@ function App() {
                     type="text"
                     placeholder='Название поста'/>
 
-                <input ref={bodyInputRef} type="text"/>
-                {/* <MyInput ref={bodyInputRef}
+                
+                <MyInput ref={bodyInputRef}
                     type="text"
-                    placeholder='Описание поста'/> */}
+                    placeholder='Описание поста'/>
                 <MyButton onClick={addNewPost}>Создать пост</MyButton>
             </form>
             <PostsList posts={posts}
