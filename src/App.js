@@ -20,15 +20,30 @@ function App() {
             body: 'Description about Dart.'
         }
     ])
+    // состояние title управляемое компонентом MyInput -> onChange
+    const [title, setTitle] = useState('');
 
+    // обработчик нажатия кнопки MyButton -> onClick
+    const addNewPost = (event) => {
+        event.preventDefault(); // отменить поведение по умолчанию
+        console.log(title);
+    }
     return (
         <div className="App">
-          <form>
-            <MyInput type="text" placeholder='Название поста'/>
-            <MyInput type="text" placeholder='Описание поста'/>
-            <MyButton disabled>Создать пост</MyButton>
-          </form>
-            <PostsList posts={posts} title="Список постов 1"/>
+            <form>
+                <MyInput value={title}
+                    onChange={
+                        (event) => {
+                            setTitle(event.target.value); // установить поле title 
+                        }
+                    }
+                    type="text"
+                    placeholder='Название поста'/>
+                <MyInput type="text" placeholder='Описание поста'/>
+                <MyButton onClick={addNewPost}>Создать пост</MyButton>
+            </form>
+            <PostsList posts={posts}
+                title="Список постов 1"/>
         </div>
     );
 }
