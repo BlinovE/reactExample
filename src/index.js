@@ -5,6 +5,6 @@ import App from './App';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <div>
-    Хелло Ворлд React !
+    <App/>
   </div>
 );
