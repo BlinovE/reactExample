@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import PostsList from './components/PostsList';
 import MyButton from './components/UI/button/MyButton';
 import MyInput from './components/UI/input/MyInput';
@@ -22,15 +22,17 @@ function App() {
     ])
     // состояние title управляемое компонентом MyInput -> onChange
     const [title, setTitle] = useState('');
-
-    // хук useRef для отслеживания состояния не управляемого input элемента
-    const bodyInputRef = useRef();
+    const [body, setBody] = useState('');
 
     // обработчик нажатия кнопки MyButton -> onClick
     const addNewPost = (event) => {
         event.preventDefault(); // отменить поведение по умолчанию
-        console.log(title);
-        console.log(bodyInputRef.current.value);
+        const newPost={ // объект нового поста
+          id: Date.now(),
+          title,
+          body
+        }
+        setPosts([...posts,newPost]);// добавление нового post в массив posts
     }
     return (
         <div className="App">
@@ -44,8 +46,13 @@ function App() {
                     type="text"
                     placeholder='Название поста'/>
 
-                
-                <MyInput ref={bodyInputRef}
+
+                <MyInput value={body}
+                    onChange={
+                        (event) => {
+                            setBody(event.target.value); // установить поле body
+                        }
+                    }
                     type="text"
                     placeholder='Описание поста'/>
                 <MyButton onClick={addNewPost}>Создать пост</MyButton>
