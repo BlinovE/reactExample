@@ -21,36 +21,32 @@ function App() {
         }
     ])
     // состояние title управляемое компонентом MyInput -> onChange
-    const [title, setTitle] = useState('');
-    const [body, setBody] = useState('');
+    const [post, setPost] = useState({title:'', body:''});
 
     // обработчик нажатия кнопки MyButton -> onClick
     const addNewPost = (event) => {
         event.preventDefault(); // отменить поведение по умолчанию
-        const newPost={ // объект нового поста
-          id: Date.now(),
-          title,
-          body
-        }
-        setPosts([...posts,newPost]);// добавление нового post в массив posts
+        
+        setPosts([...posts,{...post, id:Date.now()}]);// добавление нового post в массив posts
+        setPost({title:'',body:''});// обнуление объекта post
     }
     return (
         <div className="App">
             <form>
-                <MyInput value={title}
+                <MyInput value={post.title}
                     onChange={
                         (event) => {
-                            setTitle(event.target.value); // установить поле title
+                            setPost({...post, title:event.target.value}); // установить поле title
                         }
                     }
                     type="text"
                     placeholder='Название поста'/>
 
 
-                <MyInput value={body}
+                <MyInput value={post.body}
                     onChange={
                         (event) => {
-                            setBody(event.target.value); // установить поле body
+                            setPost({...post,body:event.target.value}); // установить поле body
                         }
                     }
                     type="text"
