@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Post from './components/Post.jsx';
+import PostsList from './components/PostsList';
 import './styles/App.css';
 
 function App() {
@@ -21,13 +21,8 @@ function App() {
 
     return (
         <div className="App">
-          <h1>Посты:</h1>
-            {
-            posts.map(post => <Post post={post}
-                key={
-                    post.id
-                }/>)
-        } </div>
+            <PostsList posts={posts} title="Список постов 1"/>
+        </div>
     );
 }
 
