@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import PostsList from "./components/PostsList";
 import PostForm from "./components/PostForm";
 import "./styles/App.css";
@@ -30,25 +30,34 @@ function App() {
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
   };
-  // функция удфления поста из массива posts
+
+  // функция удаления поста из массива posts
   const removePost = (post) => {
     setPosts(posts.filter((p) => p.id !== post.id));
   };
+
   //функция сортировки постов в массиве posts
   const sortPosts = (sort) => {
     setSelectedSort(sort);
   };
 
-  function getSortedPosts() {
-    console.log("SoRTED POST")
-    if (selectedSort) {
-      return [...posts].sort((a, b) =>
-        a[selectedSort].localeCompare(b[selectedSort])
-      );
-    }
-    return posts;
-  }
-  const sortedPosts = getSortedPosts();
+  const sortedPosts = useMemo( // сортировка постов
+    ()=>{
+        if (selectedSort) {
+            return [...posts].sort((a, b) =>
+                a[selectedSort].localeCompare(b[selectedSort])
+            );
+        }
+        return posts;
+    },[selectedSort, posts]
+  )
+
+  
+  const sortedAndSearchedPosts = useMemo( // фильтрация постов
+    ()=>{
+        return sortedPosts.filter(post => post.title.toLocaleLowerCase().includes(searchQuery))
+    },[searchQuery,sortedPosts]
+  )
 
   
 
@@ -76,7 +85,7 @@ function App() {
       {posts.length ? ( // если список постов пуст вывести "Посты не найдены"
         <PostsList
           remove={removePost}
-          posts={sortedPosts}
+          posts={sortedAndSearchedPosts}
           title="Список постов 1"
         />
       ) : (
