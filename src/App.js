@@ -2,8 +2,7 @@ import React, { useState, useMemo } from "react";
 import PostsList from "./components/PostsList";
 import PostForm from "./components/PostForm";
 import "./styles/App.css";
-import MySelect from "./components/UI/select/select";
-import MyInput from "./components/UI/input/MyInput";
+import PostFilter from "./components/PostFilter";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -23,8 +22,7 @@ function App() {
       body: "Description about Dart.",
     },
   ]);
-  const [selectedSort, setSelectedSort] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filter,setFilter] = useState({sort: '', query: ''})
 
   // функция обратного вызова для создания нового объекта массива posts
   const createPost = (newPost) => {
@@ -35,28 +33,24 @@ function App() {
   const removePost = (post) => {
     setPosts(posts.filter((p) => p.id !== post.id));
   };
-
-  //функция сортировки постов в массиве posts
-  const sortPosts = (sort) => {
-    setSelectedSort(sort);
-  };
+  
 
   const sortedPosts = useMemo( // сортировка постов
     ()=>{
-        if (selectedSort) {
+        if (filter.sort) {
             return [...posts].sort((a, b) =>
-                a[selectedSort].localeCompare(b[selectedSort])
+                a[filter.sort].localeCompare(b[filter.sort])
             );
         }
         return posts;
-    },[selectedSort, posts]
+    },[filter.sort, posts]
   )
 
   
   const sortedAndSearchedPosts = useMemo( // фильтрация постов
     ()=>{
-        return sortedPosts.filter(post => post.title.toLocaleLowerCase().includes(searchQuery))
-    },[searchQuery,sortedPosts]
+        return sortedPosts.filter(post => post.title.toLocaleLowerCase().includes(filter.query.toLowerCase()))
+    },[filter.query,sortedPosts]
   )
 
   
@@ -66,23 +60,9 @@ function App() {
       <PostForm create={createPost} />
       <hr style={{ margin: "15px 0" }} />
 
-      <MyInput  //поле фильтрации постов
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Поиск..."
-      />
+      <PostFilter filter={filter} setFilter={setFilter} />
 
-      <MySelect // поле сортировки
-        value={selectedSort}
-        onChange={sortPosts}
-        defaultValue="Сортировка"
-        options={[
-          { value: "title", name: "По названию" },
-          { value: "body", name: "По опиcанию" },
-        ]}
-      />
-
-      {posts.length ? ( // если список постов пуст вывести "Посты не найдены"
+      {sortedAndSearchedPosts.length ? ( // если список постов пуст вывести "Посты не найдены"
         <PostsList
           remove={removePost}
           posts={sortedAndSearchedPosts}
